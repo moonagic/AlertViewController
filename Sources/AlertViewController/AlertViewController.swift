@@ -78,11 +78,6 @@ private class PresentationController: UIPresentationController {
 }
 
 
-
-private let kInitialScale: CGFloat = 1.2
-private let kSpringDamping: CGFloat = 45.71
-private let kSpringVelocity: CGFloat = 0
-
 private class AnimationController: NSObject, UIViewControllerAnimatedTransitioning {
     
     private var isPresentation = false
@@ -92,7 +87,7 @@ private class AnimationController: NSObject, UIViewControllerAnimatedTransitioni
     }
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.404
+        return 0
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
@@ -109,18 +104,18 @@ private class AnimationController: NSObject, UIViewControllerAnimatedTransitioni
         animatingView?.frame = transitionContext.finalFrame(for: animatingController)
         
         if self.isPresentation {
-            animatingView?.transform = CGAffineTransform(scaleX: kInitialScale, y: kInitialScale)
+            animatingView?.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
             animatingView?.alpha = 0
-            animate({
+            MagicAnimator {
                 animatingView?.transform = CGAffineTransform(scaleX: 1, y: 1)
                 animatingView?.alpha = 1
-            }, inContext: transitionContext) { finished in
+            } completion: { finished in
                 transitionContext.completeTransition(finished)
             }
         } else {
-            animate({
+            MagicAnimator {
                 animatingView?.alpha = 0
-            }, inContext: transitionContext) { finished in
+            } completion: { finished in
                 fromView.removeFromSuperview()
                 transitionContext.completeTransition(finished)
             }
@@ -128,10 +123,13 @@ private class AnimationController: NSObject, UIViewControllerAnimatedTransitioni
         
     }
     
-    private func animate(_ animations: @escaping (() -> Void), inContext context: UIViewControllerContextTransitioning, withCompletion completion: @escaping (Bool) -> Void) {
-//        UIView.animate(withDuration: self.transitionDuration(using: context), delay: 0, usingSpringWithDamping: kSpringDamping, initialSpringVelocity: kSpringVelocity, options: [], animations: animations, completion: completion)
-        UIView.animate(withDuration: 0, delay: 0, options: UIView.AnimationOptions(rawValue: 458880), animations: animations, completion: completion)
+    private func MagicAnimator(animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil) {
+        UIView.animate(withDuration: 0, delay: 0, options: MagicAnimateOptionsValue, animations: animations, completion: completion)
     }
+
+    /// This is a magic number
+    let MagicAnimateOptionsValue = UIView.AnimationOptions(rawValue: 458880)
+    
 }
 
 private extension UIViewController {
