@@ -134,7 +134,10 @@ private class AnimationController: NSObject, UIViewControllerAnimatedTransitioni
 
 private extension UIViewController {
     class func topViewController(_ viewController: UIViewController? = nil) -> UIViewController? {
-        let viewController = viewController ?? UIApplication.shared.keyWindow?.rootViewController
+        
+        let app = UIApplication.value(forKeyPath: "UIApplication.shared") as? UIApplication
+        
+        let viewController = viewController ?? app?.keyWindow?.rootViewController
         if let navigationController = viewController as? UINavigationController, !navigationController.viewControllers.isEmpty {
             return self.topViewController(navigationController.viewControllers.last)
         } else if let tabBarController = viewController as? UITabBarController, let selectedController = tabBarController.selectedViewController {
