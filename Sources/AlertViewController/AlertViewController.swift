@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 public class AlertViewController: UIViewController {
     private lazy var transitionDelegate = AlertTransition()
     
@@ -132,6 +133,7 @@ private class AnimationController: NSObject, UIViewControllerAnimatedTransitioni
     
 }
 
+@available(iOSApplicationExtension, unavailable)
 private extension UIViewController {
     class func topViewController(_ viewController: UIViewController? = nil) -> UIViewController? {
         let viewController = viewController ?? UIApplication.shared.keyWindow?.rootViewController
